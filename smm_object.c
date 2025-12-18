@@ -150,13 +150,14 @@ void printGrades(int player)
         return;
     }
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) 
+	{
         void* ptr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
         
         int gradeIdx = ((smmObj_object_t*)ptr)->grade;
         printf(" - %s : %s\n", smmObj_getObjectName(ptr), smmObj_gradeName[gradeIdx]);
     }
-    printf(" ------------------------\n");
+    printf("\n");
 }
 
 #if 0
