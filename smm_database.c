@@ -12,7 +12,8 @@
 #define MAX_LIST            LISTNO_OFFSET_GRADE+MAX_PLAYER
 
 //node definition for linked list
-typedef struct node{
+typedef struct node
+{
     int index;      //index of the node
     void* obj;      //object data
     void* next;         //pointer to the next
@@ -45,7 +46,7 @@ static node_t* smmList(int list_nr, int index)
     node_t* ndPtr = list_database[list_nr];
     if (listPtr[list_nr] != NULL && listPtr[list_nr]->index <= index)
     {
-        ndPtr = listPtr[list_nr];
+    	ndPtr = listPtr[list_nr];
     }
     
     //return for wrong input

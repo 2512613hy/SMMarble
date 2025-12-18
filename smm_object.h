@@ -17,7 +17,18 @@
     foodChance,
     festival
 */
+#define SMMNODE_TYPE_LECTURE                0
+#define SMMNODE_TYPE_RESTAURANT             1
+#define SMMNODE_TYPE_LABORATORY             2
+#define SMMNODE_TYPE_HOME                   3
+#define SMMNODE_TYPE_GOTOLAB                4
+#define SMMNODE_TYPE_FOODCHANGE             5
+#define SMMNODE_TYPE_FESTIVAL               6
 
+#define SMMNODE_OBJTYPE_BOARD     0
+#define SMMNODE_OBJTYPE_GRADE     1
+#define SMMNODE_OBJTYPE_FOOD      2
+#define SMMNODE_OBJTYPE_FEST      3
 
 /* grade :
     A+,
@@ -30,17 +41,22 @@
     C0,
     C-
 */
-
+#define SMMNODE_MAX_GRADE         13
 
 
 //object generation
-void smmObj_genNode(void);
-
+char* smmObj_getObjectName(void *ptr);
+char* smmObj_getNodeName(int node_nr);
+int smmObj_getNodeType(int node_nr);
+int smmObj_getNodeCredit(int node_nr);
+int smmObj_getNodeEnergy(int node_nr);
+int smmObj_getObjectEnergy(void *ptr);
 //member retrieving
 
 
 //element to string
 
-
+void printGrades(int player);
 
 #endif /* smm_object_h */
+

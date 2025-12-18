@@ -7,33 +7,161 @@
 
 #include "smm_common.h"
 #include "smm_object.h"
+#include "smm_database.h"
 #include <string.h>
 
-#define MAX_NODETYPE    7
-#define MAX_GRADE       9
+#define MAX_NODENR        100
+#define MAX_NODETYPE      7
 
+
+#define GRADE_A+          0
+#define GRADE_A0          1
+#define GRADE_A-          2
+#define GRADE_B+          3
+#define GRADE_B0          4
+#define GRADE_B-          5
+#define GRADE_C+          6
+#define GRADE_C0          7
+#define GRADE_C-          8
+#define GRADE_D+          9
+#define GRADE_D0          10
+#define GRADE_D-          11
+#define GRADE_F           12
+
+
+static char smmObj_nodeName[MAX_NODETYPE][MAX_CHARNAME] = 
+{
+       "lecture",
+       "restaurant",
+       "laboratory",
+       "home",
+       "gotoLab",
+       "foodChance",
+       "festival"
+};
+
+static char smmObj_gradeName[SMMNODE_MAX_GRADE][MAX_CHARNAME] = 
+{
+       "A+",
+       "A0",
+       "A-",
+       "B+",
+       "B0",
+       "B-",
+       "C+",
+       "C0",
+       "C-",
+       "D+",
+       "D0",
+       "D-",
+       "F"
+};
+
+//structure type definition
+typedef struct 
+{
+    char name[MAX_CHARNAME];
+    int objType;
+    int type;
+    int credit;
+    int energy;
+    int grade;
+} smmObj_object_t;
 
 
 //object generation
-void smmObj_genNode(void)
+void* smmObj_genObject(char* name, int objType, int type, int credit, int energy, int grade)
 {
+    smmObj_object_t* ptr;
+    ptr = (smmObj_object_t*)malloc(sizeof(smmObj_object_t));
     
+    strcpy(ptr->name, name);
+    ptr->type = type;
+    ptr->objType = objType;
+    ptr->credit = credit;
+    ptr->energy = energy;
+    ptr->grade = grade;
+    
+    return ((void*)ptr);
 }
-
 
 
 //member retrieving
-
-
-#if 0
-//element to string
-char* smmObj_getNodeName(smmNode_e type)
+char* smmObj_getObjectName(void *ptr)
 {
-    return smmNodeName[type];
+    smmObj_object_t* objPtr = (smmObj_object_t*)ptr;
+    return (objPtr->name);
 }
 
+int smmObj_getObjectType(int node_nr)
+{
+	void* ptr = smmdb_getData(LISTNO_NODE, node_nr);
+    return ((smmObj_object_t*)ptr)->type;
+}
+
+int smmObj_getObjectCredit(int node_nr)
+{
+	void* ptr = smmdb_getData(LISTNO_NODE, node_nr);
+    return ((smmObj_object_t*)ptr)->credit;
+}
+
+int smmObj_getNodeType(int node_nr) 
+{
+    return smmObj_getObjectType(node_nr);
+}
+
+int smmObj_getNodeCredit(int node_nr) 
+{
+    return smmObj_getObjectCredit(node_nr);
+}
+
+int smmObj_getNodeEnergy(int node_nr) 
+{
+    void* ptr = smmdb_getData(LISTNO_NODE, node_nr);
+    return ((smmObj_object_t*)ptr)->energy;
+}
+
+char* smmObj_getNodeName(int node_nr)
+{
+    void* ptr = smmdb_getData(LISTNO_NODE, node_nr);
+    return ((smmObj_object_t*)ptr)->name;
+}
+
+int smmObj_getObjectEnergy(void *ptr)
+{
+    smmObj_object_t* objPtr = (smmObj_object_t*)ptr;
+    return (objPtr->energy);
+}
+
+char* smmObj_getTypeName(int node_type)
+{
+    return (smmObj_nodeName[node_type]);
+}
+
+void printGrades(int player) {
+    int i;
+    int size = smmdb_len(LISTNO_OFFSET_GRADE + player);
+    printf("\n [Grade History for Player %i]\n", player);
+    
+    
+    if (size == 0) {
+        printf(" No grades recorded yet.\n");
+        return;
+    }
+
+    for (i = 0; i < size; i++) {
+        void* ptr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
+        
+        int gradeIdx = ((smmObj_object_t*)ptr)->grade;
+        printf(" - %s : %s\n", smmObj_getObjectName(ptr), smmObj_gradeName[gradeIdx]);
+    }
+    printf(" ------------------------------\n");
+}
+
+#if 0
 char* smmObj_getGradeName(smmGrade_e grade)
 {
     return smmGradeName[grade];
 }
 #endif
+
